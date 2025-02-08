@@ -1,4 +1,4 @@
-package ru.dimalab.storymodapi.StoryModEngine;
+package ru.dimalab.storymodengine;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
