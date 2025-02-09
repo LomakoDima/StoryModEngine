@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "ru.dimalab.storymodengine.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "storymodapi.refmap.json",
+  "refmap": "storymodengine.refmap.json",
   "mixins": [
   ],
   "client": [
