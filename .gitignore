@@ -1,0 +1,42 @@
+# gradle
+.gradle/
+build/
+out/
+
+# forge run/datagen output
+run/
+run-data/
+
+# eclipse
+bin/
+*.launch
+.classpath
+.project
+.settings/
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+.vscode/
+*.code-workspace
+
+# claude code session state
+.claude/
+
+# logs
+*.log
+logs/
+
+# os junk
+.DS_Store
+Thumbs.db
+
+# local overrides, never shared
+local.properties
+
+# safety net for stray compiled output outside build/
+*.class

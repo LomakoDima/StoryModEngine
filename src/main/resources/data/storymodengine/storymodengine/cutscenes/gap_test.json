@@ -1,0 +1,36 @@
+{
+  "duration": 100,
+  "shots": [
+    {
+      "start": 0,
+      "duration": 100,
+      "position": [
+        {"tick": 0, "x": 0, "y": 200, "z": 0},
+        {"tick": 100, "x": 20, "y": 206, "z": 20}
+      ],
+      "rotation": [
+        {"tick": 0, "yaw": 0, "pitch": 0},
+        {"tick": 100, "yaw": 90, "pitch": 20}
+      ],
+      "fov": [
+        {"tick": 0, "value": 70},
+        {"tick": 100, "value": 90}
+      ],
+      "roll": [
+        {"tick": 0, "value": 0},
+        {"tick": 50, "value": 12},
+        {"tick": 100, "value": 0}
+      ]
+    }
+  ],
+  "subtitles": [
+    {"text": "Loaded from a data pack JSON file.", "start": 10, "duration": 40, "speaker": null, "fadeIn": 10, "fadeOut": 10, "color": "#7FD8FF", "position": "BOTTOM"}
+  ],
+  "fades": [
+    {"start": 0, "duration": 15, "color": "#000000", "from": 1, "to": 0},
+    {"start": 85, "duration": 15, "color": "#000000", "from": 0, "to": 1}
+  ],
+  "markers": [
+    {"name": "midpoint", "tick": 50}
+  ]
+}

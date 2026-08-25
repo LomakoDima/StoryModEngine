@@ -1,0 +1,26 @@
+{
+  "title": "Wandering Merchant",
+  "start": "start",
+  "nodes": {
+    "start": {
+      "lines": [
+        {"speaker": "Merchant", "text": "Care to see my wares, friend?"}
+      ],
+      "choices": [
+        {"id": "yes", "text": "Show me what you have.", "target": "wares"},
+        {"id": "no", "text": "Not today.", "target": "leave"}
+      ]
+    },
+    "wares": {
+      "lines": [
+        {"speaker": "Merchant", "text": "Finest goods this side of the river, all at a fair price!"}
+      ],
+      "jump": "leave"
+    },
+    "leave": {
+      "lines": [
+        {"speaker": "Merchant", "text": "Safe travels, then."}
+      ]
+    }
+  }
+}
