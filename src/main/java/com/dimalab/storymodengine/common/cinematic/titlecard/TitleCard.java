@@ -35,6 +35,10 @@ import java.util.Optional;
 public record TitleCard(Component title, Optional<Component> subtitle, int fadeInTicks, int holdTicks, int fadeOutTicks)
         implements Track<TitleCardState> {
 
+    /** Ticks per dot-count step of the trailing-ellipsis animation — ~0.5s at 20 tps, a natural "thinking..." pace. */
+    private static final int ELLIPSIS_STEP_TICKS = 10;
+    private static final String ELLIPSIS = "...";
+
     public TitleCard {
         // Defensive, not developer-facing: this constructor also runs on the network-deserialization
         // path (TitleCard is embedded directly in PlayTitleCardPacket), which must never throw from
@@ -74,7 +78,31 @@ public record TitleCard(Component title, Optional<Component> subtitle, int fadeI
             phase = TitleCardPhase.FADE_OUT;
             opacity = 0f;
         }
-        return new TitleCardState(phase, opacity, title, subtitle);
+        return new TitleCardState(phase, opacity, animateEllipsis(title, tick), subtitle);
+    }
+
+    /**
+     * A title ending in a literal {@code "..."} gets those dots cycling {@code "." → ".." → "..."}
+     * over time, like a "thinking..." indicator — {@code subtitle} is deliberately never touched,
+     * only {@code title}. Driven by the same {@code tick} {@link #evaluate} already receives, so this
+     * stays a pure function of time like the rest of this class (no separate client-side ticking
+     * state, unlike {@code dialogue.client.TypewriterState} — that one animates arbitrary text
+     * length, which genuinely needs mutable per-line progress; this only ever cycles a fixed 1-3
+     * dot count, which a tick count alone already determines).
+     *
+     * <p>Rebuilds the trailing dots as a fresh {@link Component} carrying the original title's
+     * top-level {@link net.minecraft.network.chat.Style} — matches every real usage in this codebase
+     * (a single plain {@code Component.literal(...)}); a title built from multiple differently-styled
+     * siblings would lose their individual styling, an accepted v1 simplification, not a redesign.
+     */
+    private static Component animateEllipsis(Component title, int tick) {
+        String plain = title.getString();
+        if (!plain.endsWith(ELLIPSIS)) {
+            return title;
+        }
+        String base = plain.substring(0, plain.length() - ELLIPSIS.length());
+        int dotCount = (tick / ELLIPSIS_STEP_TICKS) % 3 + 1;
+        return Component.literal(base + ".".repeat(dotCount)).setStyle(title.getStyle());
     }
 
     public static final class Builder {

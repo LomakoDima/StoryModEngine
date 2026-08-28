@@ -3,6 +3,7 @@ package com.dimalab.storymodengine.common.core;
 import com.dimalab.storymodengine.common.capabilities.CapabilityBootstrap;
 import com.dimalab.storymodengine.common.cinematic.CinematicBootstrap;
 import com.dimalab.storymodengine.client.content.AutoParticleRegistration;
+import com.dimalab.storymodengine.common.concurrent.ConcurrencyBootstrap;
 import com.dimalab.storymodengine.common.content.ContentDiscovery;
 import com.dimalab.storymodengine.common.dialogue.DialogueBootstrap;
 import com.dimalab.storymodengine.common.event.EventBootstrap;
@@ -61,6 +62,12 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
  * check has to happen here, not inside that class. Mod authors never call any of these subsystems
  * directly; this is the only entry point meant to grow as more engine subsystems need their own
  * one-time wiring.
+ *
+ * <p>{@link ConcurrencyBootstrap} runs first of all, ahead even of {@link ContentDiscovery} — it has
+ * no dependency on anything else here, and every other subsystem is free to use {@code
+ * common.concurrent.Async} internally without caring about init order. It only registers listeners;
+ * the real thread pools aren't created until {@code ServerStartingEvent} (see {@code
+ * concurrent.integration.AsyncLifecycle}), so nothing here actually starts a thread.
  */
 public final class EngineBootstrap {
 
@@ -68,6 +75,7 @@ public final class EngineBootstrap {
     }
 
     public static void init(IEventBus modEventBus) {
+        ConcurrencyBootstrap.init();
         ContentDiscovery.run(modEventBus);
         ResourcePacks.register(modEventBus);
         NetworkBootstrap.init(modEventBus);

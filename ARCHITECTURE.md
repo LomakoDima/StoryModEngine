@@ -3203,6 +3203,58 @@ Not related to `cinematic.Trigger` (an unrelated, narrower type — a cutscene t
 N, fire cue X"). Different package, no compile collision, but the two are easy to confuse by name
 alone if both ever needed importing into the same file.
 
+## `concurrent` — background work, with exactly one door back to the main thread
+
+Infrastructure underneath the engine, not a second runtime beside it: gameplay stays exactly as
+deterministic and main-thread-oriented as before, and this package exists purely so CPU-bound work,
+blocking I/O, and timed/delayed operations have somewhere safe to run *off* that thread. `Async` is
+the whole public surface (`Async.run`/`.supply`/`.delay`/`.schedule`/`.parallel`/`.race`/`.cpu()`/
+`.io()`/`.scheduled()`/`.main()`), and `AsyncTask<T>` is both the future and the cancellation handle —
+no mod author ever touches `Thread`/`ExecutorService`/`Future` directly, and no `CompletableFuture`
+(used internally) crosses the public API.
+
+Exactly four executors, never a fifth: `CPU` (bounded, `max(2, cores − 1)` threads), `IO` (elastic,
+0–64), `SCHEDULED` (one thread, timekeeping only — it never runs a task body, only ever hands one to
+CPU/IO/MAIN once its delay elapses), and `MAIN`, which isn't a pool at all — `Async.main(...)`/
+`.thenMain(...)` route through a `server.isSameThread() ? run() : server.execute(...)` dispatcher, the
+same shape `logging.LogEntry#runOnServerThread` already used, generalized. Wall-clock scheduling
+(`java.time.Duration` — new to this codebase, confined to this package) and Minecraft-tick scheduling
+(`TickScheduler`, driving `Async.nextTick`/`.afterTicks`/`.everyTick`) are two deliberately separate
+axes, never mixed; for gameplay/story logic, ticks stay authoritative.
+
+**The main-thread rule is structural, not just documented**: a background lambda passed to
+`Async.cpu()`/`.io()`/`.run`/`.supply` receives no `FlowContext`/`Level`/`Entity`/`ServerPlayer` — there
+is nothing Minecraft-shaped to accidentally misuse off-thread. The only ways back are
+`Async.main(...)`, `AsyncTask#thenMain(...)`, and `Flow.await`'s consumer; `AsyncTask#blockingGet(...)`
+— the one call that could deadlock a caller — throws immediately if invoked on the main thread rather
+than merely warning against it.
+
+**Flow integration** is the one place this package touches another system: `Flow.async(Function)`/
+`Flow.await(Function, BiConsumer)` build an `AsyncNode` (mirroring `EventWaiter`'s subscribe/release
+shape) that suspends the flow without polling or blocking. Since `Node.state` is a plain,
+non-volatile field, a background completion is never written to it directly — it's handed to
+`FlowResumeQueue` and drained by `ConcurrencyTickBridge` at `TickEvent.Phase.START`, strictly before
+`FlowTickBridge`'s existing `Phase.END` handler runs `FlowManager.tick()` — so the state change always
+settles within the same tick it happened, with zero changes to `Flow`/`FlowManager`/`FlowRuntime`/
+`Node` themselves. `FlowHandle.cancel()` reaches a running `AsyncTask` through the same composite
+`onCancel` propagation every other cancellable node already uses.
+
+Cancellation is cooperative only (`CancellationToken`/`CancellationSource`, never `Thread.interrupt()`),
+cascading parent→child but never child→parent — an upstream task may be shared by `Async.parallel`/
+`Async.race`. A background failure that nothing observes is logged once, at `ERROR`, never silently
+dropped and never able to crash the server. `ConcurrencyBootstrap.init()` runs first in
+`EngineBootstrap`, registering listeners only; the real thread pools are created on
+`ServerStartingEvent` and torn down on `ServerStoppingEvent` (both fire on the integrated server too,
+which is why pool creation isn't done once at mod-construction time).
+
+The one seam this whole package exists to keep open: `executor.ExecutorFactory` is the entire
+abstraction between "what `Async` calls" and "what actually runs the work." `PlatformThreadExecutorFactory`
+(plain `java.lang.Thread` pools) is the only implementation today — no Java 21 API is referenced
+anywhere in this pass — but a future `VirtualThreadExecutorFactory` is a second implementation and
+nothing else, with zero change to `Async`/`AsyncTask`/any call site. See `ASYNC_SYSTEM_DESIGN.md` for
+the full design, and `/storymodengine async list|info <id>|stats|debug <on|off>|selftest|stresstest
+[count]` for the in-game observability and verification commands.
+
 ## Planned package layout
 
 Not implemented yet — listed here so future systems have an obvious home and a consistent

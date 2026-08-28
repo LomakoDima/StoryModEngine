@@ -2,7 +2,9 @@ package com.dimalab.storymodengine.common.flow;
 
 import com.dimalab.storymodengine.api.flow.Evaluator;
 import com.dimalab.storymodengine.api.event.Event;
+import com.dimalab.storymodengine.common.concurrent.AsyncTask;
 import com.dimalab.storymodengine.common.flow.node.Action;
+import com.dimalab.storymodengine.common.flow.node.AsyncNode;
 import com.dimalab.storymodengine.common.flow.node.Branch;
 import com.dimalab.storymodengine.common.flow.node.Checkpoint;
 import com.dimalab.storymodengine.common.flow.node.Choice;
@@ -18,6 +20,7 @@ import com.dimalab.storymodengine.common.flow.node.TaskAction;
 import com.dimalab.storymodengine.common.flow.node.Wait;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,9 +51,9 @@ import java.util.function.Supplier;
  *
  * A mod author never constructs {@code Action}/{@code Condition}/{@code Sequence}/{@code
  * Selector}/{@code Parallel}/{@code Branch}/{@code Choice}/{@code Wait}/{@code SubFlow}/{@code
- * EventWaiter}/{@code TaskAction}/{@code PolicyNode}/{@code Checkpoint} directly — these static
- * factories are the whole surface; the {@code node} package's classes exist to be instantiated by
- * them, not named at a call site.
+ * EventWaiter}/{@code TaskAction}/{@code PolicyNode}/{@code Checkpoint}/{@code AsyncNode} directly —
+ * these static factories are the whole surface; the {@code node} package's classes exist to be
+ * instantiated by them, not named at a call site.
  */
 public final class Flow {
 
@@ -131,6 +134,37 @@ public final class Flow {
     /** Same as {@link #waitForEvent(Class, BiPredicate)}, but fails if no matching event arrives within {@code timeout}. */
     public static <E extends Event> Flow waitForEvent(Class<E> eventType, BiPredicate<FlowContext, E> filter, Timeout timeout) {
         return new Flow(() -> new EventWaiter<>(eventType, filter, timeout));
+    }
+
+    /**
+     * Starts a background {@code AsyncTask} (via {@code common.concurrent.Async}) and suspends the
+     * flow until it settles — never polling, never blocking the server thread. Fails the node if the
+     * task fails, is cancelled, or times out. {@code starter} runs on the main thread (it receives
+     * the live {@code FlowContext}) purely to *launch* the task — the work itself runs wherever the
+     * returned {@link AsyncTask} was scheduled on. See {@code AsyncNode}.
+     *
+     * <p><b>Never register the result of this call directly as a top-level Flow</b> — wrap it in
+     * {@link #sequence}, even a sequence of one. See {@code AsyncNode}'s Javadoc for why a bare-root
+     * async step can be stranded.
+     */
+    public static <T> Flow async(Function<FlowContext, AsyncTask<T>> starter) {
+        return new Flow(() -> new AsyncNode<>(starter, null));
+    }
+
+    /**
+     * Same as {@link #async}, but {@code consumer} runs on the main thread with the task's result,
+     * immediately before the node completes — the one sanctioned place to write a background result
+     * into a {@code Blackboard}/capability/anything Minecraft-shaped. Keep {@code starter}'s own
+     * {@code Async.io()}/{@code Async.cpu()} lambda from capturing {@code FlowContext}/{@code
+     * Level}/{@code ServerPlayer} — those are only safe to touch inside {@code consumer}, back on
+     * the main thread.
+     *
+     * <p><b>Never register the result of this call directly as a top-level Flow</b> — wrap it in
+     * {@link #sequence}, even a sequence of one. See {@code AsyncNode}'s Javadoc for why a bare-root
+     * async step can be stranded.
+     */
+    public static <T> Flow await(Function<FlowContext, AsyncTask<T>> starter, BiConsumer<FlowContext, T> consumer) {
+        return new Flow(() -> new AsyncNode<>(starter, consumer));
     }
 
     /** Runs {@code inner} as a single composed step of this Flow — see {@code SubFlow}. */
