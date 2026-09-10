@@ -8,7 +8,7 @@ import static com.dimalab.storymodengine.common.multiblock.PatternMatchers.air;
 import static com.dimalab.storymodengine.common.multiblock.PatternMatchers.block;
 
 /**
- * The structure {@code /storymodengine multiblock} demonstrates live. Deliberately
+ * The structure {@code /sme multiblock} demonstrates live. Deliberately
  * <b>asymmetric</b> — not the fully-symmetric altar shown in {@code Multiblock}'s own Javadoc —
  * because a rotationally-symmetric pattern can't actually prove rotation detection works: a
  * broken (or no-op) rotation transform would still "accidentally" match a symmetric layout from

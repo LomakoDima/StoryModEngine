@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.joml.Vector3f;
 
 /**
- * Posted server-side by {@link EventTestPacket#handle} once a client's {@code /storymodengine
+ * Posted server-side by {@link EventTestPacket#handle} once a client's {@code /sme
  * eventtest network} packet arrives — proves the network integration (an existing {@code @Packet}
  * triggers {@code Events.post(...)}), the math integration ({@link #position()} crossed the network
  * through the existing {@code SerializerRegistry} Vector3f serializer, no new serialization code),

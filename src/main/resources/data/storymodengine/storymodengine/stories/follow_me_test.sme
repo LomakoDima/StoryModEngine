@@ -1,0 +1,32 @@
+// follow_me_test.sme — an NPC that does nothing but follow the player who spawned it.
+//
+// HOW TO RUN:
+//   1. Edit the `pos` line below to somewhere near you (F3 in-game to read your own X/Y/Z).
+//   2. /reload
+//   3. /time set 100   <- spawns the NPC and immediately sends it after you (fires once)
+//   4. Walk away — it should keep re-pathing toward you every ~1s and stop a couple of
+//      blocks short instead of shoving into you.
+//   5. Right-click it at any point to make it stop following.
+//
+// `behavior stationary` means it never wanders on its own and never picks a fight — the only
+// thing that ever moves it is npc_follow_player.
+
+story follow_me_test {
+
+    npc "Спутник" {
+        model "player_model"
+        behavior stationary
+        pos -9 -60.0 8.5
+        onInteract {
+            npc_stop_move "Спутник"
+        }
+    }
+
+    trigger follow_me_walkthrough {
+        when time 100
+        run {
+            npc_spawn "Спутник"
+            npc_follow_player "Спутник"
+        }
+    }
+}

@@ -1,6 +1,8 @@
 package com.dimalab.storymodengine.common;
 
 import com.dimalab.storymodengine.common.core.EngineBootstrap;
+import com.dimalab.storymodengine.common.entity.ModEntities;
+import com.dimalab.storymodengine.common.model.block.ModelBlocks;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -57,6 +59,15 @@ public class StoryModEngine {
 
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        // Registers the NPC and prop entity types (see common.entity.ModEntities) — client-side
+        // renderer registration happens separately in client.entity.ModEntityRenderers, gated to
+        // Dist.CLIENT the same way every other client-only registration in this mod already is.
+        ModEntities.register(modEventBus);
+
+        // The model block itself is discovered by @AutoContent; only its BlockEntityType needs
+        // explicit registration (see ModelBlocks' own Javadoc for why).
+        ModelBlocks.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

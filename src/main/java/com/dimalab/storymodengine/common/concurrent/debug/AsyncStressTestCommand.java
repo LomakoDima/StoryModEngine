@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * {@code /storymodengine async stresstest [count]} — 1,000 by default, hard-capped at {@link
+ * {@code /sme async stresstest [count]} — 1,000 by default, hard-capped at {@link
  * #MAX_COUNT} by Brigadier's own range validation. Deliberately a separate command in a separate
  * class from {@code AsyncSelfTestCommand}: nothing here is ever invoked automatically (not by
  * {@code selftest}, not by any bootstrap), matching the requirement that load testing is opt-in,
@@ -37,7 +37,7 @@ public final class AsyncStressTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("async")
                         .then(Commands.literal("stresstest")
                                 .executes(context -> run(context, DEFAULT_COUNT))

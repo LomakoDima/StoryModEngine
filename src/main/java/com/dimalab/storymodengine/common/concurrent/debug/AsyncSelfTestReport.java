@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A thread-safe pass/fail collector for {@code /storymodengine async selftest} — checks land here
+ * A thread-safe pass/fail collector for {@code /sme async selftest} — checks land here
  * from whichever executor they happened to run on (that's the entire point of the suite), so every
  * mutation is lock-free/atomic rather than assuming the caller's thread. {@link #onDone} fires
  * exactly once, whichever comes first: every registered check calling {@link #finishOne()}, or the

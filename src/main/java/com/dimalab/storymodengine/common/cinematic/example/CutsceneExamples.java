@@ -10,7 +10,7 @@ import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.rot
 
 /**
  * A small, genuinely static {@code @AutoCutscene} definition — purely to show the declarative API
- * cleanly (see {@code ARCHITECTURE.md}). This is <b>not</b> what {@code /storymodengine cutscene
+ * cleanly (see {@code ARCHITECTURE.md}). This is <b>not</b> what {@code /sme cutscene
  * demo} plays: a real cutscene almost always needs positions relative to wherever it's triggered,
  * which a field built once at mod-load time (before any world exists) fundamentally can't express —
  * {@link CutsceneDemoCommand} instead builds its definition fresh, per invocation, from the

@@ -39,7 +39,7 @@ import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.pos
 import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.rot;
 
 /**
- * {@code /storymodengine cinematic showcase} — the mandatory demonstration of the expanded
+ * {@code /sme cinematic showcase} — the mandatory demonstration of the expanded
  * cinematic runtime, exercising every item the task's own checklist asked for inside one command:
  * multi-shot camera movement, FOV, roll, LookAt, a CROSSFADE shot transition, actor movement, a
  * fade-in/fade-out subtitle, a spatial audio cue, screen fade bookends, a timeline marker, an
@@ -62,7 +62,7 @@ public final class CinematicShowcaseCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cinematic")
                         .then(Commands.literal("showcase").executes(CinematicShowcaseCommand::showcase))));
     }
@@ -188,7 +188,7 @@ public final class CinematicShowcaseCommand {
         // in CutsceneDemoCommand/CutsceneExampleGallery (see their Javadoc for why "after" matters).
         SPAWNED_NPCS.put(player.getUUID(), villager);
 
-        EngineLog.channel("Cinematic").success("Showcase started. Try: /storymodengine cutscene pause|resume|seek <ticks>|jumpto reveal|speed <x>|skip")
+        EngineLog.channel("Cinematic").success("Showcase started. Try: /sme cutscene pause|resume|seek <ticks>|jumpto reveal|speed <x>|skip")
                 .toChat(player);
         return 1;
     }

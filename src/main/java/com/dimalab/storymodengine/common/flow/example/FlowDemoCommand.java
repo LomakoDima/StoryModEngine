@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine flowdemo start|status|choice <id>|signal|pause|resume|cancel} — the
+ * {@code /sme flowdemo start|status|choice <id>|signal|pause|resume|cancel} — the
  * required demonstration of the expanded runtime, exercising {@code Choice}, {@code Wait}, {@code
  * SubFlow}, and {@code EventWaiter} together in one Flow ({@link FlowDemoScenario#DEMO}, found
  * automatically via {@code @AutoFlow} — nothing here registers it). {@code pause}/{@code resume}/
@@ -30,7 +30,7 @@ public final class FlowDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("flowdemo")
                         .then(Commands.literal("start").executes(FlowDemoCommand::start))
                         .then(Commands.literal("status").executes(FlowDemoCommand::status))

@@ -7,6 +7,9 @@
   "mixins": [
   ],
   "client": [
+    "client.RenderTypeMixin",
+    "client.VertexBufferMixin",
+    "client.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

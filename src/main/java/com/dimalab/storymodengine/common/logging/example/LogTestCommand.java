@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine logtest} — exercises every capability {@code logging} was asked for in
+ * {@code /sme logtest} — exercises every capability {@code logging} was asked for in
  * one place: all six levels, a placeholder, a raw {@link Component}, a style/color override, a
  * broadcast-to-everyone chat send, a send-to-one-player chat send, console-only output, and a
  * second, independently-named channel. Works identically whether run by a player (singleplayer or
@@ -32,7 +32,7 @@ public final class LogTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("logtest")
                         .executes(LogTestCommand::run)));
     }

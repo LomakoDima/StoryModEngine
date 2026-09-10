@@ -4,7 +4,7 @@ import com.dimalab.storymodengine.api.concurrent.ExecutorKind;
 
 import java.util.Map;
 
-/** A point-in-time snapshot of everything {@code /storymodengine async stats} prints — see {@code AsyncDebug#stats()}. */
+/** A point-in-time snapshot of everything {@code /sme async stats} prints — see {@code AsyncDebug#stats()}. */
 public record AsyncStats(
         Map<ExecutorKind, KindStats> byKind,
         int liveTasks,

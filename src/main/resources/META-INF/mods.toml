@@ -40,6 +40,13 @@ authors = "${mod_authors}" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description = '''${mod_description}'''
+
+# Registers this mod's Mixin config so it actually loads — without this block, everything in
+# storymodengine.mixins.json (and the mixin/ package it points at) is compiled into the jar but never
+# applied.
+[[mixins]]
+config = "storymodengine.mixins.json"
+
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies."${mod_id}"]] #optional
 # the modid of the dependency

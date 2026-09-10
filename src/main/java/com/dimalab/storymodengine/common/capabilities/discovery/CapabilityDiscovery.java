@@ -107,10 +107,12 @@ public final class CapabilityDiscovery {
 
             Capability annotation = field.getAnnotation(Capability.class);
             boolean sync = annotation != null && annotation.sync();
+            com.dimalab.storymodengine.api.capabilities.SyncAudience audience =
+                    annotation != null ? annotation.audience() : com.dimalab.storymodengine.api.capabilities.SyncAudience.AUTO;
 
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modId, fieldName.toLowerCase(Locale.ROOT));
             CapabilityDescriptor descriptor = new CapabilityDescriptor(
-                    id, dataType, handle.factory(), ownerKind, sync, serializer);
+                    id, dataType, handle.factory(), ownerKind, sync, audience, serializer);
             CapabilityRegistry.register(descriptor);
             handle.bind(descriptor);
 

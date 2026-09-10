@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine raycast selftest} — this project has no JUnit setup (verified: no {@code
+ * {@code /sme raycast selftest} — this project has no JUnit setup (verified: no {@code
  * src/test}, no test dependency in {@code build.gradle}), so this is the same in-game,
  * assert-and-report substitute {@code quest.debug.QuestCompilerTestCommand} already established.
  * Nearly everything in {@code raycast} needs a real {@code Level} (block/entity clipping, {@code
@@ -50,7 +50,7 @@ public final class RaycastSelfTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("raycast")
                         .then(Commands.literal("selftest").executes(RaycastSelfTestCommand::run))));
     }

@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine dialogue demo} — starts {@link DialogueExamples#ENCOUNTER}, the required
+ * {@code /sme dialogue demo} — starts {@link DialogueExamples#ENCOUNTER}, the required
  * demonstration: several consecutive lines (one an {@code INTERNAL_THOUGHT}, rendered by the
  * non-modal {@code DialogueWindow} overlay with typewriter reveal), then a three-option branch that
  * opens the modal {@code DialogueScreen} and leads to a distinct closing line per choice. {@code
@@ -34,7 +34,7 @@ public final class DialogueDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("dialogue")
                         .then(Commands.literal("demo").executes(DialogueDemoCommand::demo))
                         .then(Commands.literal("start")

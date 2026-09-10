@@ -30,7 +30,7 @@ import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.pos
 import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.rot;
 
 /**
- * {@code /storymodengine cutscene demo} — the required live demonstration. Spawns a temporary
+ * {@code /sme cutscene demo} — the required live demonstration. Spawns a temporary
  * villager a few blocks ahead of the player, builds a two-shot, ten-second {@link
  * CutsceneDefinition} relative to the player's current position/facing (see {@link
  * CutsceneExamples}'s Javadoc for why this is built fresh here rather than as a static field), and
@@ -66,7 +66,7 @@ public final class CutsceneDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cutscene")
                         .then(Commands.literal("demo").executes(CutsceneDemoCommand::demo))));
     }

@@ -1,0 +1,47 @@
+// collect_items_test.sme — manual test bed for npc_collect_items / npc_stop_collect.
+//
+// HOW TO RUN:
+//   1. Edit the two `pos` lines below to somewhere near you (F3 for your own X/Y/Z) — put the two
+//      NPCs a few blocks apart from each other.
+//   2. /reload
+//   3. Throw down a mix of items near BOTH NPCs — some sticks, some dirt, maybe a couple of stacks
+//      of sticks spread out. (Q to drop from your hotbar.)
+//   4. Right-click "Сборщик" -> starts collecting only sticks within 10 blocks.
+//   5. Right-click "Сборщик2" -> starts collecting only sticks within 10 blocks too — if a stick you
+//      dropped is roughly equidistant from both, this is the actual test: watch that only ONE of
+//      them walks to it, not both. The other should visibly move on to a different stick (or stand
+//      idle if none are left unclaimed).
+//   6. Right-click "Сборщик" again while it's mid-walk to a stick -> npc_stop_collect. Confirm it
+//      stops immediately, and (drop a fresh stick to check) "Сборщик2" is free to claim anything the
+//      first one had been holding.
+//   7. Try dirt too — it should be ignored by both (they only ever asked for sticks).
+
+story collect_items_test {
+
+    npc "Сборщик" {
+        model "player_model"
+        behavior stationary
+        pos 250 -60.0 -409
+        onInteract {
+            npc_collect_items "Сборщик" "minecraft:stick" 10
+        }
+    }
+
+    npc "Сборщик2" {
+        model "player_model"
+        behavior stationary
+        pos 252 -60.0 -409
+        onInteract {
+            npc_collect_items "Сборщик2" "minecraft:stick" 10
+        }
+    }
+
+    trigger spawn_collectors {
+        when time 100
+        once
+        run {
+            npc_spawn "Сборщик"
+            npc_spawn "Сборщик2"
+        }
+    }
+}

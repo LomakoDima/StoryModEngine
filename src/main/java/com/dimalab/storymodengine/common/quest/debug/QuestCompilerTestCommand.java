@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine quest test} — this project has no JUnit setup (verified: no {@code
+ * {@code /sme quest test} — this project has no JUnit setup (verified: no {@code
  * src/test}, no test dependency in {@code build.gradle}), so this is the same in-game,
  * assert-and-report substitute every other subsystem's own {@code debug}/{@code selftest} command
  * uses (see {@code raycast.debug.RaycastSelfTestCommand}, {@code trigger.debug
@@ -47,7 +47,7 @@ public final class QuestCompilerTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("quest")
                         .then(Commands.literal("test").executes(QuestCompilerTestCommand::run))));
     }

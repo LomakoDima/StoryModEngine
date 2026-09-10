@@ -1,0 +1,112 @@
+// npc_test.sme — a manual test bed for the new npc {} declaration + npc_* script commands
+// (movement, look, teleport, items, blocks, target/pickup, animation, onInteract, onShiftInteract).
+//
+// HOW TO RUN:
+//   1. Edit the `pos` line below to somewhere safe near you (press F3 in-game to read your own
+//      coordinates, then copy X/Y/Z — any flat-ish spot with a little room to walk works).
+//   2. /reload
+//   3. /time set 100          <- fires the automated walkthrough once (see "trigger npc_walkthrough")
+//   4. Right-click the NPC at any point to test onInteract separately (plays "hello" once).
+//   5. Shift+right-click the NPC to open the "general_store" shop screen instead (buy iron swords
+//      and bread with emeralds — give yourself a stack of emeralds first with /give).
+//   6. To re-run the walkthrough after further edits: /reload, then /time set 0 followed by
+//      /time set 100 again (the trigger only re-fires after dayTime leaves its match window).
+//
+// Nothing here despawns the NPC automatically except the very last step, so you can watch each
+// stage land before the next one starts (each `wait` is real time, not a rush).
+
+story npc_test {
+
+    shop "general_store" {
+        currency "minecraft:emerald"
+        item "minecraft:iron_sword" price 5
+        item "minecraft:shield" price 8
+        item "minecraft:bread" price 1 count 4
+    }
+
+    npc "Тестовый Страж" {
+        model "player_model"
+        behavior stationary
+        pos 180.447 -60.0 77.583
+        onInteract {
+            npc_play_once "Тестовый Страж" hello
+        }
+        onShiftInteract {
+            open_shop "general_store"
+        }
+    }
+
+    trigger npc_walkthrough {
+        when time 100
+        repeat
+        run {
+            // 1. Spawn (idempotent — re-running this while it's still alive just logs a warning
+            // and does nothing, it won't duplicate the NPC).
+            npc_spawn "Тестовый Страж"
+            wait 2s
+
+            // 2. Look — should turn its head toward you regardless of which way its body faces.
+            npc_look_at_player "Тестовый Страж"
+            wait 3s
+            npc_stop_look "Тестовый Страж"
+            wait 1s
+
+            // 3. Move — walks a few blocks over; the standard_player controller's "walk" state
+            // should play automatically while it's moving (from the earlier animation-system fix).
+            npc_move_to "Тестовый Страж" 180 -60.0 71.549
+            wait 3s
+            npc_stop_move "Тестовый Страж"
+            wait 1s
+
+            // 4. Follow — should now walk toward you specifically and keep re-pathing as you move.
+            // Walk away from it for a few seconds to see it follow.
+            npc_follow_player "Тестовый Страж"
+            wait 5s
+            npc_stop_move "Тестовый Страж"
+            wait 1s
+
+            // 5. Manual animation override — plays once, then freezes, then loops; watch it switch.
+            npc_play_once "Тестовый Страж" handsUp
+            wait 2s
+            npc_play_freeze "Тестовый Страж" sit
+            wait 3s
+            npc_play_looped "Тестовый Страж" dance1
+            wait 3s
+            npc_stop_animation "Тестовый Страж"
+            wait 1s
+
+            // 6. Items — check its main hand for a sword, and your own inventory for 3 emeralds.
+            npc_give_main_hand "Тестовый Страж" diamond_sword 1
+            npc_give_off_hand "Тестовый Страж" shield 1
+            wait 1s
+            npc_drop_item "Тестовый Страж" emerald 3
+            wait 1s
+
+            // 7. Blocks — safe either way: if you placed a lever at this spot it should visibly
+            // toggle; if there's nothing there (or it's not a lever/button/door) this just logs
+            // a warning and moves on. Adjust the coordinates if you want to actually test it.
+            npc_use_block "Тестовый Страж" 180.542 -59 70.552
+            npc_destroy_block "Тестовый Страж" 178.380 -59 70.525
+            wait 1s
+
+            // 8. Combat target + pickup — sets it to "target you" (mostly affects look priority
+            // for a stationary NPC with no attack goal), then clears it; then enables pickup and
+            // throw an item near it (Q) to see it get collected.
+            npc_set_target "Тестовый Страж" ""
+            wait 2s
+            npc_clear_target "Тестовый Страж"
+            npc_set_pickup "Тестовый Страж" true
+            wait 3s
+
+            // 9. Teleport variants.
+            npc_teleport "Тестовый Страж" 178.575 -60.0 62.325
+            wait 1s
+
+
+            // 10. Despawn — comment this whole block out once you're happy, if you want to keep
+            // the NPC around afterward instead of it vanishing at the end of the walkthrough.
+            wait 2s
+            npc_despawn "Тестовый Страж"
+        }
+    }
+}

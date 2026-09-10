@@ -39,7 +39,7 @@ public final class ModelShapes {
     /**
      * Drops every cached definition and shape, so the next {@link #load}/{@link #get} reparses
      * from the classpath. Not needed in normal use (models don't change while the game is
-     * running) — exposed for diagnostics such as {@code /storymodengine voxel test}, which uses it
+     * running) — exposed for diagnostics such as {@code /sme voxel test}, which uses it
      * to verify parsing is deterministic independent of cache identity.
      */
     public static void clearCache() {

@@ -10,9 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Set;
 
 /**
  * A non-modal HUD overlay for whichever {@link DialogueLine} is currently showing — mirrors {@code
@@ -27,12 +32,28 @@ import net.minecraftforge.fml.common.Mod;
  * plain lines/thoughts/whispers/shouts. Advancing needs a dedicated {@link
  * DialogueContinueKeyMapping} rather than a mouse click, specifically because this is non-modal: a
  * click here would still reach the world underneath (swing the held item, break/place a block).
+ *
+ * <p>Also suppresses whichever vanilla HUD overlays would otherwise compete with the box for screen
+ * space ({@link #onRenderOverlay}) — the exact same blocklist-by-default technique {@code
+ * TitleCardOverlay} uses (cancel everything unless it's on a short keep-list, so a future overlay
+ * neither of us has heard of is suppressed by default too, instead of chasing bug reports one
+ * overlay at a time). The keep-list is different from the title card's, though, and deliberately
+ * so: a title card is a full-screen modal moment where nothing but the text should show, but this
+ * window is non-modal — the player keeps fighting/moving/mining underneath it (see above) and still
+ * needs the HUD that supports that: hotbar, crosshair, health/hunger/armor/air, the vehicle/mount
+ * and experience bars, and the effect icons. What actually gets hidden is the handful of overlays
+ * that are themselves blocks of text competing for the same screen real estate as a dialogue line —
+ * chat foremost (the literal complaint this was built for), plus subtitles and vanilla's own
+ * title/subtitle text, which default to the same bottom-/center-screen territory this box does.
  */
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID, value = Dist.CLIENT)
 public final class DialogueWindow {
 
     private static final DialogueWindowState STATE = new DialogueWindowState();
     private static boolean continueWasDown;
+
+    /** Built lazily — see {@code TitleCardOverlay#keepVisible} for why this can't be a {@code static final} field initializer. */
+    private static Set<NamedGuiOverlay> keepVisible;
 
     private DialogueWindow() {
     }
@@ -89,5 +110,43 @@ public final class DialogueWindow {
         int screenWidth = minecraft.getWindow().getGuiScaledWidth();
         int screenHeight = minecraft.getWindow().getGuiScaledHeight();
         DialogueWindowRenderer.render(graphics, minecraft.font, STATE, screenWidth, screenHeight, Util.getMillis());
+    }
+
+    @SubscribeEvent
+    public static void onRenderOverlay(RenderGuiOverlayEvent.Pre event) {
+        if (STATE.isVisible() && !keepVisible().contains(event.getOverlay())) {
+            event.setCanceled(true);
+        }
+    }
+
+    private static Set<NamedGuiOverlay> keepVisible() {
+        Set<NamedGuiOverlay> set = keepVisible;
+        if (set == null) {
+            set = Set.of(
+                    VanillaGuiOverlay.HOTBAR.type(),
+                    VanillaGuiOverlay.CROSSHAIR.type(),
+                    VanillaGuiOverlay.PLAYER_HEALTH.type(),
+                    VanillaGuiOverlay.ARMOR_LEVEL.type(),
+                    VanillaGuiOverlay.FOOD_LEVEL.type(),
+                    VanillaGuiOverlay.AIR_LEVEL.type(),
+                    VanillaGuiOverlay.MOUNT_HEALTH.type(),
+                    VanillaGuiOverlay.JUMP_BAR.type(),
+                    VanillaGuiOverlay.EXPERIENCE_BAR.type(),
+                    VanillaGuiOverlay.POTION_ICONS.type(),
+                    VanillaGuiOverlay.ITEM_NAME.type(),
+                    VanillaGuiOverlay.VIGNETTE.type(),
+                    VanillaGuiOverlay.SPYGLASS.type(),
+                    VanillaGuiOverlay.HELMET.type(),
+                    VanillaGuiOverlay.FROSTBITE.type(),
+                    VanillaGuiOverlay.PORTAL.type(),
+                    VanillaGuiOverlay.SLEEP_FADE.type(),
+                    VanillaGuiOverlay.SCOREBOARD.type(),
+                    VanillaGuiOverlay.PLAYER_LIST.type(),
+                    VanillaGuiOverlay.DEBUG_TEXT.type(),
+                    VanillaGuiOverlay.FPS_GRAPH.type(),
+                    VanillaGuiOverlay.RECORD_OVERLAY.type());
+            keepVisible = set;
+        }
+        return set;
     }
 }

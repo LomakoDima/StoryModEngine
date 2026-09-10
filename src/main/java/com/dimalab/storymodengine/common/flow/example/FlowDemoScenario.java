@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * The required demonstration of the expanded runtime — {@code Choice} → {@code Wait} → {@code
- * SubFlow} → {@code EventWaiter} in one Flow, run via {@code /storymodengine flowdemo}.
+ * SubFlow} → {@code EventWaiter} in one Flow, run via {@code /sme flowdemo}.
  *
  * <pre>
  * Sequence

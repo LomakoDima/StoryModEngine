@@ -1,0 +1,26 @@
+// Dev/perf-test script, not sample content — delete this file (or the trigger block below) once
+// you're done stress-testing. It has no gameplay purpose.
+//
+// Spawns 100 stationary NPCs around whichever player joins the world, each wearing 'player_model'
+// and looping a different animation clip, so you can watch F3's frame time with a real crowd of
+// skinned+animated entities instead of guessing from code. Behaviour is fixed at STATIONARY (no
+// pathfinding/look-at) so this measures render+animation cost specifically, not AI-goal-tick cost —
+// see NpcStressTestCommands' own doc for why those are kept separate.
+//
+// `once` means this fires the first time each player joins this world after the script loads, not
+// every single login — remove the trigger (or the whole file) when you're done, otherwise it stays
+// armed for the next `/reload` or world load.
+//
+// Want a bigger/smaller crowd? Change the '100' below, or skip the trigger entirely and just run
+// `/sme npc stresstest 100` (or any count up to 500) whenever you like — same underlying spawn.
+
+story npc_stress_test {
+
+    trigger on_join_stress_test {
+        when event player.join
+        once
+        run {
+            npc_spawn_stress_test 100
+        }
+    }
+}

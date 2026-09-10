@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
-/** Posted by {@code /storymodengine eventtest cancel} — a HIGH-priority listener cancels it; NORMAL/LOW must never run. */
+/** Posted by {@code /sme eventtest cancel} — a HIGH-priority listener cancels it; NORMAL/LOW must never run. */
 public final class CancellableTestEvent implements CancellableEvent {
 
     private final ServerPlayer player;

@@ -1,0 +1,6 @@
+{
+  "skinMaterial": 0,
+  "animationController": "storymodengine:standard_player",
+  "hitboxExcludeNodes": ["LeftArm", "RightArm"],
+  "forceRenderPath": "pipeline"
+}

@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine raycast test|debug [distance]} — the spec's own §17 test command. Runs an
+ * {@code /sme raycast test|debug [distance]} — the spec's own §17 test command. Runs an
  * {@code .any()} cast from the invoking player (server-side, exercising the dedicated-server-safe
  * path) and reports the result to chat; {@code debug} runs the identical cast with {@link
  * RaycastQuery#debug} enabled, so a live server can confirm the particle trail only ever appears
@@ -37,7 +37,7 @@ public final class RaycastDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("raycast")
                         .then(Commands.literal("test")
                                 .executes(ctx -> run(ctx, DEFAULT_DISTANCE, false))

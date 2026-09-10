@@ -40,7 +40,7 @@ public final class DialogueScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
 
-        int boxWidth = Math.min(420, this.width - 40);
+        int boxWidth = style.layout().resolveWidth(this.width);
         int x = (this.width - boxWidth) / 2;
         List<String> texts = choices.stream().map(DialogueChoice::text).toList();
         int boxHeight = DialogueWindowRenderer.choicesHeight(font, texts.size());
@@ -53,7 +53,7 @@ public final class DialogueScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            int boxWidth = Math.min(420, this.width - 40);
+            int boxWidth = style.layout().resolveWidth(this.width);
             int x = (this.width - boxWidth) / 2;
             int boxHeight = DialogueWindowRenderer.choicesHeight(font, choices.size());
             int y = (this.height - boxHeight) / 2;

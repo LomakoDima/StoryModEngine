@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.List;
 
 /**
- * The priority/parent-dispatch demo event for {@code /storymodengine eventtest priority|parent} —
+ * The priority/parent-dispatch demo event for {@code /sme eventtest priority|parent} —
  * a plain class (not a {@code record}, since {@link ChildTestEvent} needs to {@code extends} it;
  * records can only implement interfaces). {@link #executionOrder()} is a mutable log every listener
  * of one {@code post} call appends its own name to, read back by the command after {@code post}

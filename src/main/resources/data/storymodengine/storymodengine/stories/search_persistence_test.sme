@@ -1,0 +1,64 @@
+// search_persistence_test.sme — manual test bed for entity search/await + entity.data + runOnce
+// persistent trigger + wait_persistent.
+//
+// HOW TO RUN:
+//   1. Edit the `pos` line below to somewhere near you (F3 for your own X/Y/Z).
+//   2. /reload
+//   3. /time set 100   <- fires the walkthrough once
+//   4. Watch the chat/log for each step's result. Spawn a zombie nearby before step 4 if you want
+//      to see find_nearest_entity actually match something (empty match is also a valid, safe path).
+//   5. To test wait_persistent surviving a restart: after this runs once, stop and restart the
+//      server before the 1-minute wait finishes, then confirm it still completes roughly on time
+//      instead of restarting the full duration.
+//   6. To test the "once persistent" trigger: restart the server and confirm this whole walkthrough
+//      does NOT fire again (remove "persistent" to compare against the non-persistent default).
+
+story search_persistence_test {
+
+    npc "Хранитель" {
+        model "player_model"
+        behavior stationary
+        pos 180.447 -60.0 77.583
+    }
+
+    var greeting = ""
+    var visits = 0
+    var nearestZombie = ""
+    var rememberedNote = ""
+
+    trigger search_persistence_walkthrough {
+        when time 100
+        once persistent
+        run {
+            npc_spawn "Хранитель"
+            wait 1s
+
+            // 1. entity.data round-trip — string (tracking, syncs to everyone nearby) and int (never, server-only).
+            entity_set_data_string "Хранитель" "greeting" "Добро пожаловать!" "tracking"
+            entity_get_data_string greeting "Хранитель" "greeting"
+
+            entity_set_data_int "Хранитель" "visits" 1 "never"
+            entity_get_data_int visits "Хранитель" "visits"
+
+            // 2. remember-style get-or-set — first run sets it, every later run (if this trigger
+            // weren't "once") would read the same value back instead of overwriting it.
+            entity_get_or_set_data_string rememberedNote "Хранитель" "first_seen" "yes"
+
+            // 3. search + await — binds a UUID string, then waits (with a real timeout) for it to
+            // resolve to a loaded entity. Guarded: no nearby match is a normal, expected outcome
+            // (not an error), and await_entity failing would otherwise abort the rest of this
+            // sequence (a failed step fails the whole Flow.sequence) — so skip the wait entirely
+            // when nothing was found, instead of treating an empty match as a test failure.
+            find_nearest_entity nearestZombie "minecraft:zombie" 16
+            if (nearestZombie == "") {
+                end
+            } else {
+                await_entity nearestZombie 40
+            }
+
+            // 4. restart-safe wait — 1200 ticks (1 minute). Restart the server partway through to
+            // confirm it resumes from the persisted deadline instead of restarting from zero.
+            wait_persistent "search_persistence_long_wait" 1200
+        }
+    }
+}

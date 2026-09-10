@@ -5,9 +5,11 @@ import com.dimalab.storymodengine.api.concurrent.TaskTimeoutException;
 import com.dimalab.storymodengine.common.StoryModEngine;
 import com.dimalab.storymodengine.common.concurrent.Async;
 import com.dimalab.storymodengine.common.concurrent.AsyncTask;
+import com.dimalab.storymodengine.common.concurrent.StateFlow;
 import com.dimalab.storymodengine.common.concurrent.cancel.CancellationSource;
 import com.dimalab.storymodengine.common.concurrent.executor.AsyncExecutors;
 import com.dimalab.storymodengine.common.concurrent.executor.PlatformThreadExecutorFactory;
+import com.dimalab.storymodengine.common.event.Subscription;
 import com.dimalab.storymodengine.common.flow.Flow;
 import com.dimalab.storymodengine.common.flow.FlowHandle;
 import com.dimalab.storymodengine.common.flow.FlowManager;
@@ -24,11 +26,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * {@code /storymodengine async selftest} — this project's usual synchronous, in-game
+ * {@code /sme async selftest} — this project's usual synchronous, in-game
  * assert-and-report substitute for JUnit (see {@code trigger.debug.TriggerSelfTestCommand}) doesn't
  * fit here: several of these checks (the MAIN-dispatch ones especially) would deadlock a synchronous
  * command, since it would block the very server thread the continuation needs in order to run. So
@@ -39,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID)
 public final class AsyncSelfTestCommand {
 
-    private static final int TOTAL_CHECKS = 17;
+    private static final int TOTAL_CHECKS = 18;
     private static final Duration DEADLINE = Duration.ofSeconds(5);
 
     private AsyncSelfTestCommand() {
@@ -47,7 +50,7 @@ public final class AsyncSelfTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("async")
                         .then(Commands.literal("selftest").executes(AsyncSelfTestCommand::run))));
     }
@@ -79,6 +82,7 @@ public final class AsyncSelfTestCommand {
         checkContinuationExecutorRule(report);
         checkFlowIntegration(player, report);
         checkFlowCancelPropagatesToAsync(player, report);
+        checkStateFlow(report);
 
         return 1;
     }
@@ -126,6 +130,37 @@ public final class AsyncSelfTestCommand {
             report.checkTrue("failure: exception unwrapped to the same instance", result.error().map(e -> e == boom).orElse(false));
             report.finishOne();
         });
+    }
+
+    /**
+     * {@link StateFlow} doesn't need any of the async/deadline machinery the rest of this file exists
+     * for — every one of its behaviours is synchronous and observable immediately — but it lives right
+     * alongside {@link Async}/{@link AsyncTask} in {@code common.concurrent}, so its check lives here
+     * too rather than in a new, single-purpose command.
+     */
+    private static void checkStateFlow(AsyncSelfTestReport report) {
+        StateFlow<String> flow = new StateFlow<>("initial");
+        List<String> firstSeen = new ArrayList<>();
+        Subscription first = flow.subscribe(firstSeen::add);
+        report.checkTrue("StateFlow: subscribe replays the current value immediately", firstSeen.equals(List.of("initial")));
+
+        flow.set("initial");
+        report.checkTrue("StateFlow: set to an equal value does not notify", firstSeen.equals(List.of("initial")));
+
+        flow.set("changed");
+        report.checkTrue("StateFlow: set to a new value notifies existing subscribers", firstSeen.equals(List.of("initial", "changed")));
+        report.checkTrue("StateFlow: value() reflects the latest set", "changed".equals(flow.value()));
+
+        List<String> secondSeen = new ArrayList<>();
+        flow.subscribe(secondSeen::add);
+        report.checkTrue("StateFlow: a later subscriber is replayed the current value, not the initial one", secondSeen.equals(List.of("changed")));
+
+        first.unsubscribe();
+        flow.set("after-unsubscribe");
+        report.checkTrue("StateFlow: unsubscribe stops further notifications", firstSeen.equals(List.of("initial", "changed")));
+        report.checkTrue("StateFlow: a still-subscribed listener keeps receiving notifications", secondSeen.equals(List.of("changed", "after-unsubscribe")));
+
+        report.finishOne();
     }
 
     private static void checkCancellation(AsyncSelfTestReport report) {

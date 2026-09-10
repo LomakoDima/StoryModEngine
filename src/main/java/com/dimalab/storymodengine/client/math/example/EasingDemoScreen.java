@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
  * and {@link Easing} used to shape camera-path progress in {@link CameraPathCommand} here slide a
  * button in from off-screen with an overshoot-and-settle ({@link Easing#EASE_OUT_BACK}), driven by
  * {@code render}'s own {@code partialTick} rather than a fixed frame-rate-dependent step — open it
- * with {@code /storymodengine mathui} ({@link MathUiCommand}).
+ * with {@code /sme mathui} ({@link MathUiCommand}).
  */
 public final class EasingDemoScreen extends Screen {
 

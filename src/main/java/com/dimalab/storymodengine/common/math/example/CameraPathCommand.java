@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine campath} — moves the executing player along a closed
+ * {@code /sme campath} — moves the executing player along a closed
  * {@link CatmullRomSpline}{@code <Transform>} loop built around their current position, as a
  * concrete, in-game-testable demonstration of the {@code math} foundation: see
  * {@link CameraPathAnimator} for how the spline is actually walked tick by tick.
@@ -40,7 +40,7 @@ public final class CameraPathCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("campath")
                         .executes(CameraPathCommand::run)));
     }

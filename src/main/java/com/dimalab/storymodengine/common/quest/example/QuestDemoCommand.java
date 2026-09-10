@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Map;
 
 /**
- * {@code /storymodengine quest list|start <id>|stop <id>|progress <id>} — the task's own §18
+ * {@code /sme quest list|start <id>|stop <id>|progress <id>} — the task's own §18
  * debug API, common-side (server-authoritative, same as every other quest entry point).
  */
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID)
@@ -33,7 +33,7 @@ public final class QuestDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("quest")
                         .then(Commands.literal("list").executes(QuestDemoCommand::list))
                         .then(Commands.literal("start")

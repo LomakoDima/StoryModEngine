@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 /**
- * {@code /storymodengine async list|info <id>|stats|debug <on|off>} — the in-game window onto
+ * {@code /sme async list|info <id>|stats|debug <on|off>} — the in-game window onto
  * {@link AsyncDebug}, mirroring {@code trigger.example.TriggerDemoCommand}'s role for this
  * subsystem. Entirely optional: nothing here is on any hot path, and {@code debug off} (the default)
  * simply means {@link AsyncDebug#history()} stays empty — live-task listing and {@link
@@ -34,7 +34,7 @@ public final class AsyncDebugCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("async")
                         .then(Commands.literal("list").executes(AsyncDebugCommand::list))
                         .then(Commands.literal("info")
@@ -64,7 +64,7 @@ public final class AsyncDebugCommand {
         long id = LongArgumentType.getLong(context, "id");
         TaskInfo info = AsyncDebug.find(id);
         if (info == null) {
-            EngineLog.channel("Async").error("No task #{} (live or in recent history — enable with /storymodengine async debug true)", id).toChat(player);
+            EngineLog.channel("Async").error("No task #{} (live or in recent history — enable with /sme async debug true)", id).toChat(player);
             return 0;
         }
         EngineLog.channel("Async").info("#{} {} [{}] {} — parent={} created={} duration={}ms error={}",

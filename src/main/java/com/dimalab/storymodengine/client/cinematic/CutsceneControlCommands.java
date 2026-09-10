@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Runtime playback controls for whichever cutscene is currently active — {@code /storymodengine
+ * Runtime playback controls for whichever cutscene is currently active — {@code /sme
  * cutscene pause|resume|seek|jumpto|speed|skip}. Registered client-side ({@link
  * RegisterClientCommandsEvent}, since only the client knows "is a cutscene currently playing" at
  * all), but every action is now a *request* sent to the server (@code RequestCutsceneControlPacket})
@@ -41,7 +41,7 @@ public final class CutsceneControlCommands {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cutscene")
                         .then(Commands.literal("pause").executes(CutsceneControlCommands::pause))
                         .then(Commands.literal("resume").executes(CutsceneControlCommands::resume))

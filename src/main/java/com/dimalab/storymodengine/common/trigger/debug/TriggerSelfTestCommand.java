@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * {@code /storymodengine trigger selftest} — this project has no JUnit setup, so this is the same
+ * {@code /sme trigger selftest} — this project has no JUnit setup, so this is the same
  * in-game, assert-and-report substitute {@code quest.debug.QuestCompilerTestCommand} already
  * established. Two-tier structure: {@link #testGeometryAndTime} is pure logic (no player/capability
  * touched — {@link Trigger#containsPosition}/{@link Trigger#matchesTime} are plain math); the rest
@@ -44,7 +44,7 @@ public final class TriggerSelfTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("trigger")
                         .then(Commands.literal("selftest").executes(TriggerSelfTestCommand::run))));
     }

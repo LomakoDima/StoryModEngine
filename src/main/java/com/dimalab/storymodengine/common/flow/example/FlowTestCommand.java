@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine flowtest start|choice <id>|status} — the required real in-game
+ * {@code /sme flowtest start|choice <id>|status} — the required real in-game
  * demonstration. {@code start} runs {@link FlowExamples#STORY_TEST} until it parks at the
  * {@code Choice} step (a deliberate resting point — see {@code FlowState}'s Javadoc for why
  * persistence is demonstrated there rather than mid-{@code Action}); {@code status} prints the
@@ -35,7 +35,7 @@ public final class FlowTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("flowtest")
                         .then(Commands.literal("start").executes(FlowTestCommand::start))
                         .then(Commands.literal("status").executes(FlowTestCommand::status))

@@ -101,10 +101,22 @@ public final class Capabilities {
         byte[] payload = descriptor.serializer().toBytes((T) value);
         CapabilitySyncPacket packet = new CapabilitySyncPacket(descriptor.id(), entity.getId(), payload);
 
-        if (entity instanceof ServerPlayer player) {
-            Network.sendToPlayer(player, packet);
-        } else {
-            Network.sendToTracking(entity, packet);
+        switch (descriptor.audience()) {
+            case OWNER -> {
+                if (entity instanceof ServerPlayer player) {
+                    Network.sendToPlayer(player, packet);
+                }
+                // Non-player owner: OWNER means "only the owner, and only if it's a player" — matches
+                // HollowEngine's own Sync.OWNER semantics, a deliberate no-op here, not a fallback.
+            }
+            case TRACKING -> Network.sendToTracking(entity, packet);
+            case AUTO -> {
+                if (entity instanceof ServerPlayer player) {
+                    Network.sendToPlayer(player, packet);
+                } else {
+                    Network.sendToTracking(entity, packet);
+                }
+            }
         }
         EngineLog.channel("Capabilities").debug("Synchronized {} → {}", descriptor.id(), entity);
     }

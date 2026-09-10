@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine cinematic camrecord start|stop <name>} — records the local player's
+ * {@code /sme cinematic camrecord start|stop <name>} — records the local player's
  * position/rotation once per client tick into an in-memory list, then writes it out as a ready-to-
  * edit JSON cutscene (the exact schema {@code cinematic.json.CutsceneJsonLoader} reads) once
  * stopped. Deliberately commands only, no GUI screen — the task this was built from explicitly
@@ -39,7 +39,7 @@ import java.util.List;
  *
  * <p>Only camera keyframes are captured — no actors, subtitles, or audio. The written file lives
  * under the game directory (not inside any data pack), so it does *not* auto-load through the
- * normal {@code CutsceneJsonLoader}/reload path by itself — {@code /storymodengine cutscene
+ * normal {@code CutsceneJsonLoader}/reload path by itself — {@code /sme cutscene
  * playjson <name>} (see {@code cinematic.example.CutscenePlayJsonCommand}) plays it directly off
  * disk for quick iteration, no copying or {@code /reload} needed (this project's own {@code
  * runClient}/{@code runServer} Gradle tasks share one {@code run/} directory, so the file the
@@ -60,7 +60,7 @@ public final class CameraRecorderCommands {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cinematic")
                         .then(Commands.literal("camrecord")
                                 .then(Commands.literal("start").executes(CameraRecorderCommands::start))
@@ -90,7 +90,7 @@ public final class CameraRecorderCommands {
         FRAMES.clear();
         tick = 0;
         recording = true;
-        feedback("Recording camera path... run '/storymodengine cinematic camrecord stop <name>' when done.");
+        feedback("Recording camera path... run '/sme cinematic camrecord stop <name>' when done.");
         return 1;
     }
 
@@ -108,7 +108,7 @@ public final class CameraRecorderCommands {
         try {
             Path path = writeJson(name);
             feedback("Saved " + FRAMES.size() + " tick(s) to " + path
-                    + " — try it now with /storymodengine cutscene playjson " + name);
+                    + " — try it now with /sme cutscene playjson " + name);
         } catch (IOException e) {
             EngineLog.channel("Cinematic").error("Failed to write recorded camera path '" + name + "'", e);
             feedback(ChatFormatting.RED, "Failed to save — see the log.");

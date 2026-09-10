@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.joml.Vector3f;
 
 /**
- * {@code /storymodengine eventtest network} — the client → server half of the network/math/
+ * {@code /sme eventtest network} — the client → server half of the network/math/
  * capability demo, mirroring {@code NetworkTestClientCommand}. Sends the player's current position
  * as the packet payload; see {@link EventTestPacket}/{@link EventTestListeners#onNetworkTriggered}
  * for what happens once it arrives.
@@ -25,7 +25,7 @@ public final class EventTestClientCommand {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("eventtest")
                         .then(Commands.literal("network").executes(context -> {
                             var pos = Minecraft.getInstance().player.position();

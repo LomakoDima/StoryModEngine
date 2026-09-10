@@ -8,7 +8,7 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/** {@code /storymodengine mathui} — opens {@link EasingDemoScreen}. Client-only, like the screen it opens. */
+/** {@code /sme mathui} — opens {@link EasingDemoScreen}. Client-only, like the screen it opens. */
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID, value = Dist.CLIENT)
 public final class MathUiCommand {
 
@@ -17,7 +17,7 @@ public final class MathUiCommand {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("mathui")
                         .executes(context -> {
                             Minecraft.getInstance().setScreen(new EasingDemoScreen());

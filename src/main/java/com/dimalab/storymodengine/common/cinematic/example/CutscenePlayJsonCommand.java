@@ -27,7 +27,7 @@ import java.nio.file.Files;
 import java.util.Map;
 
 /**
- * {@code /storymodengine cutscene playjson <name>} — loads and immediately plays a JSON cutscene
+ * {@code /sme cutscene playjson <name>} — loads and immediately plays a JSON cutscene
  * straight off disk from {@code <server directory>/storymodengine/cutscenes/<name>.json}, the exact
  * file {@code cinematic.client.CameraRecorderCommands} writes. Exists specifically to remove the
  * "copy the file into a data pack, then {@code /reload}" round-trip a mod author would otherwise
@@ -46,7 +46,7 @@ public final class CutscenePlayJsonCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cutscene")
                         .then(Commands.literal("playjson")
                                 .then(Commands.argument("name", StringArgumentType.word())
@@ -60,7 +60,7 @@ public final class CutscenePlayJsonCommand {
 
         if (!file.isFile()) {
             EngineLog.channel("Cinematic").error(
-                    "No such file: {} — record one with /storymodengine cinematic camrecord start|stop first", file.getPath()).toChat(player);
+                    "No such file: {} — record one with /sme cinematic camrecord start|stop first", file.getPath()).toChat(player);
             return 0;
         }
 

@@ -1,0 +1,64 @@
+// prologue.sme — the SME demo scenario: village entry -> trigger -> guard dialogue -> choice ->
+// reputation change -> quest start -> objectives -> completion -> cinematic -> next dialogue.
+
+story prologue {
+
+    var village.reputation = 0
+    var player.has_met_guard = false
+
+    trigger village_entry {
+        when player enters "village_gate"
+        once
+        run {
+            if (!player.has_met_guard) {
+                set player.has_met_guard = true
+                start dialogue guard_intro
+            }
+        }
+    }
+
+    dialogue guard_intro {
+        Guard: "Halt! State your business in our village."
+        choice {
+            "I come in peace." when (village.reputation >= 0) {
+                set village.reputation += 1
+                start quest village_trial
+                jump farewell
+            }
+            "None of your business." {
+                set village.reputation -= 1
+                end
+            }
+        }
+        node farewell
+        Guard: "Then welcome, traveller. Prove yourself and we'll trust you."
+        end
+    }
+
+    quest village_trial {
+        title "The Guard's Trial"
+        description "Prove your worth to the village guard."
+        objective kill zombie 3
+        objective collect emerald 5
+        reward {
+            item emerald 3
+            xp 100
+        }
+    }
+
+    trigger trial_complete {
+        when event quest.completed
+        once
+        run {
+            set village.reputation += 5
+            play cinematic village_welcome
+            wait 3s
+            start dialogue guard_welcome
+        }
+    }
+
+    dialogue guard_welcome {
+        Guard: "You've proven yourself. Welcome to our village, friend."
+        end
+    }
+}

@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Optional;
 
 /**
- * {@code /storymodengine multiblock build|check|clear} — the required live demonstration of the
+ * {@code /sme multiblock build|check|clear} — the required live demonstration of the
  * multiblock system, exercising {@link MultiblockExamples#DEMO}. {@code build} places the demo
  * structure with a fixed physical layout at the player's feet; {@code check} runs {@link
  * MultiblockExamples#DEMO}'s {@code find} (trying all four {@link PatternRotation}s) and reports
@@ -36,7 +36,7 @@ public final class MultiblockDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("multiblock")
                         .then(Commands.literal("build").executes(MultiblockDemoCommand::build))
                         .then(Commands.literal("check").executes(MultiblockDemoCommand::check))
@@ -49,7 +49,7 @@ public final class MultiblockDemoCommand {
         placeLayer(player.serverLevel(), origin, false);
         EngineLog.channel("Multiblock").success("Demo structure built.").toChat(player);
         EngineLog.channel("Multiblock").info("Origin: {}", origin).toChat(player);
-        EngineLog.channel("Multiblock").info("Run /storymodengine multiblock check to detect it.").toChat(player);
+        EngineLog.channel("Multiblock").info("Run /sme multiblock check to detect it.").toChat(player);
         return 1;
     }
 

@@ -31,7 +31,7 @@ import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.pos
 import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.rot;
 
 /**
- * {@code /storymodengine cinematic test json|authoritative|sequence} — throwaway, hands-on
+ * {@code /sme cinematic test json|authoritative|sequence} — throwaway, hands-on
  * verification for the three "gap closure" features that can't be exercised through any existing
  * command: JSON-loaded definitions, server-authoritative actor movement, and {@code
  * CinematicManager#playSequence}. Not a permanent showcase like {@link CinematicShowcaseCommand} —
@@ -49,7 +49,7 @@ public final class GapClosureTestCommands {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cinematic")
                         .then(Commands.literal("test")
                                 .then(Commands.literal("json").executes(GapClosureTestCommands::testJson))

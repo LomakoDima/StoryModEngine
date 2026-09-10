@@ -9,7 +9,7 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/** {@code /storymodengine nettest ping} — the client → server half; see {@link NetworkTestCommand}. */
+/** {@code /sme nettest ping} — the client → server half; see {@link NetworkTestCommand}. */
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID, value = Dist.CLIENT)
 public final class NetworkTestClientCommand {
 
@@ -18,7 +18,7 @@ public final class NetworkTestClientCommand {
 
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("nettest")
                         .then(Commands.literal("ping").executes(context -> {
                             Network.sendToServer(new PingServer(System.currentTimeMillis()));

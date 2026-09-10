@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine voxel demo} — places one {@link ExampleMachineBlock} per horizontal
+ * {@code /sme voxel demo} — places one {@link ExampleMachineBlock} per horizontal
  * facing near the player so the model-derived, rotated outline is directly comparable in-world
- * (the offset "vent" cuboid visibly moves with each facing). {@code /storymodengine voxel test} —
+ * (the offset "vent" cuboid visibly moves with each facing). {@code /sme voxel test} —
  * the diagnostic coverage this package doesn't otherwise have a JUnit harness for (see
  * {@code ARCHITECTURE.md}): single/multiple boxes, model-unit conversion, empty definitions,
  * per-direction rotation, cache reuse, malformed-model handling, and parse determinism.
@@ -41,7 +41,7 @@ public final class VoxelDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("voxel")
                         .then(Commands.literal("demo").executes(VoxelDemoCommand::demo))
                         .then(Commands.literal("test").executes(VoxelDemoCommand::test))));

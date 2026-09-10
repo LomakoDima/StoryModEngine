@@ -8,7 +8,7 @@ import com.dimalab.storymodengine.api.event.SubscribeEvent;
 import com.dimalab.storymodengine.common.logging.EngineLog;
 
 /**
- * Every {@code static} listener {@code /storymodengine eventtest} exercises — discovered
+ * Every {@code static} listener {@code /sme eventtest} exercises — discovered
  * automatically by {@code EventListenerDiscovery} at mod startup; nothing in this class, or
  * anywhere else, ever calls {@code EventBus.register} on it. Each demo posts its event, then reads
  * the event's own mutable {@code executionOrder} log back to print the real dispatch order to chat

@@ -16,9 +16,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine titlecard demo} — the required live demonstration: a full-screen black
+ * {@code /sme titlecard demo} — the required live demonstration: a full-screen black
  * card fading in over "Тем временем...", holding on "Где-то глубоко под землёй", then fading back
- * out, exactly the example the title-card task was built from. {@code /storymodengine titlecard
+ * out, exactly the example the title-card task was built from. {@code /sme titlecard
  * show "<title>" ["<subtitle>"]} is the general-purpose version for custom testing — quoted
  * strings, since Brigadier's plain word argument can't hold spaces.
  */
@@ -30,7 +30,7 @@ public final class TitleCardDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("titlecard")
                         .then(Commands.literal("demo").executes(TitleCardDemoCommand::demo))
                         .then(Commands.literal("show")

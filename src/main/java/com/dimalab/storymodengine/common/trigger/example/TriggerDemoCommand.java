@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 
-/** {@code /storymodengine trigger list|info|fire} — the task's own §10 debug API, common-side. */
+/** {@code /sme trigger list|info|fire} — the task's own §10 debug API, common-side. */
 @Mod.EventBusSubscriber(modid = StoryModEngine.MODID)
 public final class TriggerDemoCommand {
 
@@ -27,7 +27,7 @@ public final class TriggerDemoCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("trigger")
                         .then(Commands.literal("list").executes(TriggerDemoCommand::list))
                         .then(Commands.literal("info")

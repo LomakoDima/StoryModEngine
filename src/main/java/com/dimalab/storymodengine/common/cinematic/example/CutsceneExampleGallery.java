@@ -52,14 +52,14 @@ import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.pos
 import static com.dimalab.storymodengine.common.cinematic.CutsceneDefinition.rot;
 
 /**
- * {@code /storymodengine cutscene play <name>} — a gallery of examples, deliberately ordered
+ * {@code /sme cutscene play <name>} — a gallery of examples, deliberately ordered
  * simple → complex, meant to exercise as much of the {@code cinematic} system's real surface as
  * one command tree reasonably can: single-keyframe statics, multi-keyframe easing, FOV, subtitles
  * with speakers, audio cues, {@code ActorTrack} (position/rotation/visibility, including the
  * {@code step()} interpolator), multi-shot hard cuts, {@code Trigger} → {@code EventBus} with a
  * real observable gameplay reaction, and a live (not just compiled) {@code Flow} → cutscene →
  * {@code Flow} continuation. This is additional demonstration content alongside the required
- * {@code /storymodengine cutscene demo} (left untouched, in {@link CutsceneDemoCommand}) — nothing
+ * {@code /sme cutscene demo} (left untouched, in {@link CutsceneDemoCommand}) — nothing
  * here changes any {@code cinematic} core class.
  *
  * <p>Every definition here is built fresh per invocation, relative to the player's live position —
@@ -97,7 +97,7 @@ public final class CutsceneExampleGallery {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("cutscene")
                         .then(Commands.literal("play")
                                 .executes(CutsceneExampleGallery::listExamples)

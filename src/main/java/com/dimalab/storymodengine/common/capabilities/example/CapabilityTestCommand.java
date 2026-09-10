@@ -14,8 +14,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * {@code /storymodengine capability} shows the executing player's current {@link StoryPlayerData};
- * {@code /storymodengine capability add <amount>} mutates it, marks it dirty, synchronizes it to
+ * {@code /sme capability} shows the executing player's current {@link StoryPlayerData};
+ * {@code /sme capability add <amount>} mutates it, marks it dirty, synchronizes it to
  * the player via the existing {@code network} system, and persists automatically the next time the
  * entity/world saves — nothing here writes NBT or a packet by hand.
  */
@@ -27,7 +27,7 @@ public final class CapabilityTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("capability")
                         .executes(CapabilityTestCommand::show)
                         .then(Commands.literal("add")

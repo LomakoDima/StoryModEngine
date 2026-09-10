@@ -6,12 +6,14 @@ import com.dimalab.storymodengine.client.content.AutoParticleRegistration;
 import com.dimalab.storymodengine.common.concurrent.ConcurrencyBootstrap;
 import com.dimalab.storymodengine.common.content.ContentDiscovery;
 import com.dimalab.storymodengine.common.dialogue.DialogueBootstrap;
+import com.dimalab.storymodengine.common.entity.data.EntityDataSerializers;
 import com.dimalab.storymodengine.common.event.EventBootstrap;
 import com.dimalab.storymodengine.common.flow.FlowBootstrap;
 import com.dimalab.storymodengine.common.flow.FlowState;
 import com.dimalab.storymodengine.common.network.NetworkBootstrap;
 import com.dimalab.storymodengine.common.quest.QuestBootstrap;
 import com.dimalab.storymodengine.common.resource.ResourcePacks;
+import com.dimalab.storymodengine.common.scripting.ScriptingBootstrap;
 import com.dimalab.storymodengine.common.trigger.TriggerBootstrap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -84,6 +86,10 @@ public final class EngineBootstrap {
         // FlowState> field; a CapabilityDescriptor's serializer chain is built once and never
         // re-resolved, so this has to run first, not just "before Flow's own bootstrap".
         FlowState.registerSerializer();
+        // Same ordering constraint as FlowState above — a CompoundTag-backed capability (entity.data's
+        // three sync tiers, see EntityDataSerializers' own doc) needs its hand-written Serializer
+        // registered before CapabilityBootstrap resolves those fields.
+        EntityDataSerializers.registerSerializer();
         CapabilityBootstrap.init(modEventBus);
         EventBootstrap.init();
         FlowBootstrap.init();
@@ -105,6 +111,9 @@ public final class EngineBootstrap {
         // Quest/Dialogue/Cinematic compile onto Flow — but a mod author's own trigger Flow can freely
         // reference any of those already-initialized systems, so it goes last among common-side calls.
         TriggerBootstrap.init();
+        // SME (the .sme story-scripting authoring layer) compiles onto every subsystem above —
+        // Flow, Dialogue, Quest, Trigger, Cinematic, Capabilities, Command — so it goes last of all.
+        ScriptingBootstrap.init();
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             String modId = ModLoadingContext.get().getContainer().getModId();

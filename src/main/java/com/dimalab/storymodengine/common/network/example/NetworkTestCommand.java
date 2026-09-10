@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * {@code /storymodengine nettest broadcast} and {@code /storymodengine nettest sync} — server-side
- * halves of the networking smoke test; {@code /storymodengine nettest ping} (client-side, since it
+ * {@code /sme nettest broadcast} and {@code /sme nettest sync} — server-side
+ * halves of the networking smoke test; {@code /sme nettest ping} (client-side, since it
  * needs to run without a player having typed anything server-authoritative) is {@link
  * NetworkTestClientCommand}.
  */
@@ -32,7 +32,7 @@ public final class NetworkTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("nettest")
                         .then(Commands.literal("broadcast").executes(NetworkTestCommand::broadcast))
                         .then(Commands.literal("sync").executes(NetworkTestCommand::sync))));

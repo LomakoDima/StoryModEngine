@@ -8,7 +8,7 @@ import com.dimalab.storymodengine.common.network.context.PacketContext;
 import org.joml.Vector3f;
 
 /**
- * The network half of {@code /storymodengine eventtest network} — nothing here is new
+ * The network half of {@code /sme eventtest network} — nothing here is new
  * infrastructure, it is the existing {@code network} system end to end: {@code @Packet} for
  * discovery, {@code ServerboundPacket} for direction, {@code PacketHandler#handle} for behavior,
  * and the already-registered {@code Vector3f} serializer for the payload. {@link #handle} is the

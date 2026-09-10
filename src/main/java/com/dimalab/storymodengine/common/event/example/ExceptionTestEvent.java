@@ -5,6 +5,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
-/** Posted by {@code /storymodengine eventtest exception} — the middle of three listeners deliberately throws. */
+/** Posted by {@code /sme eventtest exception} — the middle of three listeners deliberately throws. */
 public record ExceptionTestEvent(ServerPlayer player, List<String> executionOrder) implements Event {
 }

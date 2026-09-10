@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@code /storymodengine eventtest priority|parent|cancel|instance|exception} — the server-side
- * halves of the required in-game Event System demonstration; {@code /storymodengine eventtest
+ * {@code /sme eventtest priority|parent|cancel|instance|exception} — the server-side
+ * halves of the required in-game Event System demonstration; {@code /sme eventtest
  * network} (client-side, since it needs to send a packet) is {@link EventTestClientCommand}. Every
  * static listener these subcommands trigger lives in {@link EventTestListeners} and was discovered
  * automatically — nothing here registers one. The one exception is {@link InstanceListenerExample},
@@ -40,7 +40,7 @@ public final class EventTestCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("storymodengine")
+        event.getDispatcher().register(Commands.literal("sme")
                 .then(Commands.literal("eventtest")
                         .then(Commands.literal("priority").executes(EventTestCommand::priority))
                         .then(Commands.literal("parent").executes(EventTestCommand::parent))

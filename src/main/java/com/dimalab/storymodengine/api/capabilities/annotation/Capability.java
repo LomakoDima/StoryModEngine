@@ -1,5 +1,7 @@
 package com.dimalab.storymodengine.api.capabilities.annotation;
 
+import com.dimalab.storymodengine.api.capabilities.SyncAudience;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,4 +35,11 @@ public @interface Capability {
      * default: most persistent data is server-only bookkeeping that never needs a client copy.
      */
     boolean sync() default false;
+
+    /**
+     * Who {@code sync} reaches, when {@code sync() == true}. Defaults to {@link SyncAudience#AUTO} —
+     * today's exact owner-type-inferred behavior — so this parameter is opt-in and every existing
+     * {@code @Capability(sync = true)} declaration keeps its current behavior unchanged.
+     */
+    SyncAudience audience() default SyncAudience.AUTO;
 }

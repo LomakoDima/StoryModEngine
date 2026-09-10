@@ -1,6 +1,7 @@
 package com.dimalab.storymodengine.common.capabilities.registry;
 
 import com.dimalab.storymodengine.api.capabilities.OwnerKind;
+import com.dimalab.storymodengine.api.capabilities.SyncAudience;
 import com.dimalab.storymodengine.common.network.serialization.Serializer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -20,6 +21,7 @@ public record CapabilityDescriptor<T>(
         Supplier<T> factory,
         OwnerKind ownerKind,
         boolean sync,
+        SyncAudience audience,
         Serializer<T> serializer
 ) {
 }
